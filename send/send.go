@@ -16,6 +16,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/pborman/getopt"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -79,10 +80,19 @@ func main() {
 
 	queueName := "autoscaling"
 
-	iterations := 20
-
 	rabbitMQURI := fmt.Sprintf("amqp://%s:%s@%s:5672/", rabbitMQUser, rabbitMQPassword, rabbitMQHost)
 	rabbitMQURL := fmt.Sprintf("http://%s:15672/api/queues/%%2F/%s", rabbitMQHost, queueName)
+
+	messages := getopt.IntLong("number", 'n', 20, "Number of messages to add to queue")
+
+	help := getopt.Bool('h', "display help")
+	getopt.SetParameters("")
+	getopt.Parse()
+
+	if *help {
+		getopt.Usage()
+		os.Exit(0)
+	}
 
 	conn, err := amqp.Dial(rabbitMQURI)
 	failOnError(err, "Failed to connect to RabbitMQ")
@@ -102,7 +112,7 @@ func main() {
 	)
 	failOnError(err, "Failed to declare a queue")
 
-	for i := 1; i <= iterations; i++ {
+	for i := 1; i <= *messages; i++ {
 
 		body := "Hello World!"
 
