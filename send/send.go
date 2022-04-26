@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -72,8 +73,8 @@ func getNumberOfMessagesOnQueue(url, user, password string) (int, error) {
 
 func main() {
 
-	rabbitMQUser := "guest"
-	rabbitMQPassword := "rPISqYZ9lb"
+	rabbitMQUser := os.Getenv("RABBITMQ_DEFAULT_USER")
+	rabbitMQPassword := os.Getenv("RABBITMQ_DEFAULT_PASS")
 	rabbitMQHost := "127.0.0.1"
 
 	queueName := "autoscaling"
@@ -82,8 +83,6 @@ func main() {
 
 	rabbitMQURI := fmt.Sprintf("amqp://%s:%s@%s:5672/", rabbitMQUser, rabbitMQPassword, rabbitMQHost)
 	rabbitMQURL := fmt.Sprintf("http://%s:15672/api/queues/%%2F/%s", rabbitMQHost, queueName)
-
-	fmt.Println(rabbitMQURL)
 
 	conn, err := amqp.Dial(rabbitMQURI)
 	failOnError(err, "Failed to connect to RabbitMQ")
