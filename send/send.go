@@ -123,8 +123,8 @@ func main() {
 
 	}
 
-	// give it a couple of seconds to register the new messages on the queue with the API
-	time.Sleep(2 * time.Second)
+	// give it some time to register the new messages on the queue with the API
+	time.Sleep(5 * time.Second)
 
 	totalMessages, err := getNumberOfMessagesOnQueue(rabbitMQURL, rabbitMQUser, rabbitMQPassword)
 	if err != nil {
