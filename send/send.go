@@ -93,6 +93,7 @@ func main() {
 		os.Exit(0)
 	}
 
+	fmt.Println(rabbitMQURI)
 	conn, err := amqp.Dial(rabbitMQURI)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -119,7 +120,7 @@ func main() {
 			failOnError(err, "Failed to publish a message")
 		}
 
-		log.Printf("Sent message %v : %s\n", i, body)
+		log.Printf("Sent message %v \n", i)
 
 	}
 
